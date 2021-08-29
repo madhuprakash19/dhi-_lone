@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+Welcome {{user.username}}
+<br>
+Yor are logged in as
+{% if user.userprofileinfo.student_status %}
+student
+{% endif %}
+{% if user.userprofileinfo.teacher_status %}
+teacher
+{% endif %}
+{% if user.userprofileinfo.hod_status %}
+hod
+{% endif %}
+
+{% endblock %}
