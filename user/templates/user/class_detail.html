@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>{{class.name}}</h1>
+<h2>Total Students : {{ class.students.count }}</h2>
+<p>Subject : {{ class.subject }}</p>
+<p>Subject Code : {{ class.subject_code }}</p>
+<p>Sem : {{ class.sem }}</p>
+
+
+{% endblock %}
