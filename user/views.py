@@ -8,7 +8,8 @@ from django.urls import reverse
 from accounts.models import UserProfileInfo
 from user.models import CreateClass,ClassMember
 from django.contrib import messages
-
+from django.contrib.auth.decorators import login_required
+from .forms import AttendenceForm
 
 class HomePage(LoginRequiredMixin,TemplateView):
     template_name = 'user/index.html'
@@ -71,3 +72,26 @@ class LeaveClass(LoginRequiredMixin,RedirectView):
             membership.delete()
             messages.success(self.request,'You hav left the class!')
         return super().get(request,*args,**kwargs)
+
+
+@login_required()
+def attendence_list(request,class_id):
+
+    if request.method == 'POST':
+        attendence_form = AttendenceForm(data = request.POST)
+
+        if attendence_form.is_valid():
+            # print(class_id)
+            a = attendence_form.save(commit=False)
+            a.who = get_object_or_404(CreateClass,id=class_id)
+            a.save()
+            attendence_id =a.id
+            return HttpResponseRedirect(reverse('user:mark_attendence',args=[attendence_id,]))
+    else:
+        attendence_form = AttendenceForm()
+    return render(request,'user/attendence_list.html',
+    {'attendence_form':attendence_form,})
+
+@login_required()
+def mark_attendence(request,attendence_id):
+    return render(request,'user/mark_attendence.html',{'attendence_id':attendence_id})

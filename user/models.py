@@ -34,3 +34,19 @@ class ClassMember(models.Model):
 
     class Meta:
         unique_together = ('class_group','user')
+
+class AttendenceList(models.Model):
+    who = models.ForeignKey(CreateClass,on_delete=models.CASCADE)
+    date = models.DateField()
+    status = models.BooleanField(default = False )
+
+    def __str__(self):
+        return self.who.subject
+
+class Attendence(models.Model):
+    subject = models.ForeignKey(AttendenceList,on_delete=models.CASCADE)
+    student = models.ForeignKey(User,on_delete=models.CASCADE)
+    status = models.BooleanField(default = True)
+
+    def __str__(self):
+        return self.subject.who.subject
