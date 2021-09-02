@@ -8,5 +8,17 @@
 <p>Subject Code : {{ class.subject_code }}</p>
 <p>Sem : {{ class.sem }}</p>
 
+{% if user in class.students.all %}
+
+  <a href="{% url 'user:leave' slug=class.slug %}"
+  class="btn btn-lg btn-fill btn-warning"> <span
+  class="'glyphicon glyphicon-remove-circle'"></span>Leave</a>
+
+  {% else %}
+  <a href="{% url 'user:join' slug=class.slug %}"
+  class="btn btn-lg btn-fill btn-primary"> <span
+  class="'glyphicon glyphicon-ok-circle'"></span>Join</a>
+
+{% endif %}
 
 {% endblock %}
