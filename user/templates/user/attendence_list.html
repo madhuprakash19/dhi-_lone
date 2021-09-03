@@ -1,12 +1,21 @@
 {% extends "base.html" %}
-
+{% load bootstrap3 %}
 {% block content %}
 
-<form class=""  method="post">
-  {% csrf_token %}
-  {{attendence_form}}
-  <input type="submit" name="" value="submit">
-</form>
+  <form class=""  method="post">
+    {% csrf_token %}
+    {% bootstrap_form attendence_form %}
+    <input type="submit" name="" value="submit">
+  </form>
 
+  {% if list_attendence %}
+    {% for i in list_attendence %}
+      {{i.who.subject}}
+      {{i.status}}
+    {% endfor %}
+  {% else %}
+    No record found
+  {% endif %}
 
+  
 {% endblock %}

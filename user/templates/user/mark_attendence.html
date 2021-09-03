@@ -1,1 +1,42 @@
-{{attendence_id}}
+{% extends "base.html" %}
+{% block content %}
+
+  <div class="jumbotron">
+    <h2>Mark attendence</h2>
+    <form action="{% url 'user:save_attendence' %}" method="post">
+      {% csrf_token %}
+    {% for i in student_list %}
+    <input type="hidden" name="class_id" value="{{class_id}}">
+    <input type="hidden" name="attendence_id" value="{{attendence_id}}">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Student name</th>
+              <th>Attendence Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for j in i.students.all %}
+            <tr>
+              <td>{{j.username}}</td>
+              <td>
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                  <label class="btn btn-outline-success active">
+                      <input type="radio" name="{{ j.username }}" id="option1" autocomplete="off" value="present" checked> Present
+                  </label>
+                  <label class="btn btn-outline-danger">
+                      <input type="radio" name="{{ j.username }}" id="option2" autocomplete="off" value="absent"> Absent
+                  </label>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <input type="submit" value="Mark Attendence" class="btn btn-primary">
+    {% endfor %}
+    </form>
+  </div>
+
+
+{% endblock %}

@@ -38,7 +38,7 @@ class ClassMember(models.Model):
 class AttendenceList(models.Model):
     who = models.ForeignKey(CreateClass,on_delete=models.CASCADE)
     date = models.DateField()
-    status = models.BooleanField(default = False )
+    status = models.IntegerField(default = 0 )
 
     def __str__(self):
         return self.who.subject

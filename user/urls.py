@@ -11,5 +11,6 @@ urlpatterns = [
     path('class/join/(?P<slug>[-\w]+)/',views.JoinClass.as_view(),name='join'),
     path('class/leave/(?P<slug>[-\w]+)/',views.LeaveClass.as_view(),name='leave'),
     path('class/<int:class_id>/attendence_list/',views.attendence_list,name='attendence_list'),
-    path('class/<int:attendence_id>/mark_attendence',views.mark_attendence,name='mark_attendence'),
+    path('class/<int:attendence_id>/<int:class_id>/mark_attendence',views.mark_attendence,name='mark_attendence'),
+    path('class/save_attendence/',views.save_attendence,name='save_attendence'),
 ]
