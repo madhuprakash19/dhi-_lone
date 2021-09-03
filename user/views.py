@@ -77,14 +77,12 @@ class LeaveClass(LoginRequiredMixin,RedirectView):
 
 @login_required()
 def attendence_list(request,class_id):
-    # list_attendence = get_list_or_404(AttendenceList, who__id=class_id)
-    list_attendence = list(AttendenceList.objects.filter(who__id=class_id))
+    list_attendence = list(AttendenceList.objects.filter(who__id=class_id).order_by('-id'))
 
     if request.method == 'POST':
         attendence_form = AttendenceForm(data = request.POST)
 
         if attendence_form.is_valid():
-            # print(class_id)
             a = attendence_form.save(commit=False)
             a.who = get_object_or_404(CreateClass,id=class_id)
             a.save()
@@ -92,7 +90,7 @@ def attendence_list(request,class_id):
             return HttpResponseRedirect(reverse('user:mark_attendence',args=[attendence_id,class_id]))
     else:
         attendence_form = AttendenceForm()
-    return render(request,'user/attendence_list.html',{'attendence_form':attendence_form,'list_attendence':list_attendence})
+    return render(request,'user/attendence_list.html',{'attendence_form':attendence_form,'list_attendence':list_attendence,'class_id':class_id})
 
 @login_required()
 def mark_attendence(request,attendence_id,class_id):
@@ -100,6 +98,15 @@ def mark_attendence(request,attendence_id,class_id):
     return render(request,'user/mark_attendence.html',
     {'attendence_id':attendence_id,'class_id':class_id,'student_list':student_list})
 
+
+@login_required()
+def edit_attendence(request,attendence_id,class_id):
+    student_list = list(Attendence.objects.filter( subject__id = attendence_id ))
+    return render(request,'user/edit_attendence.html',
+    {'attendence_id':attendence_id,'class_id':class_id,'student_list':student_list})
+    
+
+@login_required()
 def save_attendence(request):
     attendence_list = get_object_or_404(AttendenceList,id=request.POST['attendence_id'])
     class_id = request.POST['class_id']
@@ -110,8 +117,17 @@ def save_attendence(request):
             status = True
         else:
             status = False
-        a = Attendence(subject = attendence_list,student = i , status = status)
-        a.save()
-        attendence_list.status = 1
-        attendence_list.save()
+        if attendence_list.status == 1:
+            try:
+                a = Attendence.objects.get(subject = attendence_list,student = i)
+                a.status = status
+                a.save()
+            except Attendence.DoesNotExist:
+                a = Attendence(subject = attendence_list,student = i , status = status)
+                a.save()
+        else:
+            a = Attendence(subject = attendence_list,student = i , status = status)
+            a.save()
+            attendence_list.status = 1
+            attendence_list.save()
     return HttpResponseRedirect(reverse('user:attendence_list',args=[class_id]))

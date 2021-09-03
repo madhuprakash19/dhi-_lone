@@ -1,21 +1,64 @@
 {% extends "base.html" %}
-{% load bootstrap3 %}
 {% block content %}
-
+<div class="jumbotron">
+  <h2>Mark New Attendence</h2>
+  <p>Select Class Date to continue </p>
   <form class=""  method="post">
     {% csrf_token %}
-    {% bootstrap_form attendence_form %}
-    <input type="submit" name="" value="submit">
+    {{ attendence_form }}
+    <br><br>
+    <input type="submit" class="btn btn-primary" value="submit">
   </form>
-
-  {% if list_attendence %}
+  <br><br><hr>
+  <h2>Previous Attendence Records</h2>
+    {% if list_attendence %}
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Class conducted on</th>
+        <th>Status</th>
+        <th>View/Edit</th>
+      </tr>
+    </thead>
     {% for i in list_attendence %}
-      {{i.who.subject}}
-      {{i.status}}
+    <tbody>
+      <tr>
+        <td>{{i.date}}</td>
+        {% if i.status %}
+          <td>
+            Marked
+          </td>
+         <td><a href="{% url 'user:edit_attendence' class_id=class_id attendence_id=i.id  %}" class="btn btn-primary btn-small">
+              Click Here</a></td>
+      {% else %}
+          <td>
+            Saved as draft
+          </td>
+          <td><a href="{% url 'user:mark_attendence' class_id=class_id attendence_id=i.id  %}" class="btn btn-primary btn-small">
+            Click Here</a></td>
+
+          {% endif %}
+
+
+      </tr>
     {% endfor %}
+    </tbody>
+
+  </table>
+
+
+
+      {{i.status}}
+
   {% else %}
     No record found
   {% endif %}
+</div>
 
-  
+
+
+
+
+
+
 {% endblock %}
