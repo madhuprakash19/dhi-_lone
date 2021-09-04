@@ -38,7 +38,16 @@ class SingleClass(LoginRequiredMixin,DetailView):
 class ListClass(LoginRequiredMixin,ListView):
     model = CreateClass
     context_object_name = 'class'
-    template_name = 'user/class_list.html'
+    template_name = 'user/student_class_list.html'
+
+@login_required()
+def all_class(request):
+    class_list = CreateClass.objects.filter( teacher=request.user )
+
+    return render(request,'user/class_list.html',{'class_list':class_list,})
+
+
+
 
 class JoinClass(LoginRequiredMixin,RedirectView):
 
@@ -104,7 +113,7 @@ def edit_attendence(request,attendence_id,class_id):
     student_list = list(Attendence.objects.filter( subject__id = attendence_id ))
     return render(request,'user/edit_attendence.html',
     {'attendence_id':attendence_id,'class_id':class_id,'student_list':student_list})
-    
+
 
 @login_required()
 def save_attendence(request):
@@ -131,3 +140,19 @@ def save_attendence(request):
             attendence_list.status = 1
             attendence_list.save()
     return HttpResponseRedirect(reverse('user:attendence_list',args=[class_id]))
+
+@login_required()
+def attendence_report(request,class_id):
+    attendence_list = list(Attendence.objects.filter( subject__who__id = class_id ))
+    report = {}
+    for i in attendence_list:
+        if i.student.username in report:
+            if i.status:
+                report[i.student.username] = report[i.student.username] + 1
+        else:
+            if i.status:
+                report[i.student.username] = 1
+            else:
+                report[i.student.username] = 0
+
+    return render(request,'user/attendence_report.html',{'report':report})

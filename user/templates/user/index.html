@@ -1,20 +1,30 @@
 {% extends 'base.html' %}
 
 {% block content %}
-Welcome {{user.username}}
+<div class="jumbotron">
+  <h1>Welcome {{user.username}}</h1>
+  Yor are logged in as
+  {% if user.userprofileinfo.student_status %}
+  student
+  {% endif %}
+  {% if user.userprofileinfo.teacher_status %}
+  teacher
+  {% endif %}
+  {% if user.userprofileinfo.hod_status %}
+  hod
+  {% endif %}
+  <br><br><br><hr>
+  {% if user.userprofileinfo.teacher_status %}
+    <a href="{% url 'user:new_class'%}" class="btn btn-primary">Create new class</a>
+    <a href="{% url 'user:all_class' %}" class="btn btn-secondary">View Your classes</a>
+  {% else %}
+    <a href="{% url 'user:student_class' %}"  class="btn btn-primary" >View all classes</a>
+  {% endif %}
+</div>
 <br>
-Yor are logged in as
-{% if user.userprofileinfo.student_status %}
-student
-{% endif %}
-{% if user.userprofileinfo.teacher_status %}
-teacher
-{% endif %}
-{% if user.userprofileinfo.hod_status %}
-hod
-{% endif %}
 
-<a href="{% url 'user:new_class' %}">Create new class</a>
+
+
 
 
 {% endblock %}

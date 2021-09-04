@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>List of all course Which you can take : </h1>
+<p>Click on the any class for more details</p>
+<div class="jumbotron">
+  {% for i in class %}
+  <a href="{% url 'user:single_class' slug=i.slug %}">
+    <h3>Subject : {{i.subject}} </h3>
+    <p>Faculty : {{i.teacher}} </p>
+    <p>Sem : {{i.sem}} </p>
+  </a>
+    <br><br>
+  {% endfor %}
+</div>
+{% endblock %}

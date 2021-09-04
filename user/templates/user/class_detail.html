@@ -1,24 +1,34 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="jumbotron">
+  <h1>Faculty : {{class.teacher.username}} </h1>
+  <p>Subject : {{ class.subject }} </p>
+  <p>Subject Code : {{ class.subject_code }}</p>
+  <p>Sem : {{class.sem}} </p>
+  <p>Total Students : {{ class.students.count }}</p>
+  {% if user.username != class.teacher.username %}
+  {% if user in class.students.all %}
 
-<h1>{{class.name}}</h1>
-<h2>Total Students : {{ class.students.count }}</h2>
-<p>Subject : {{ class.subject }}</p>
-<p>Subject Code : {{ class.subject_code }}</p>
-<p>Sem : {{ class.sem }}</p>
+    <a href="{% url 'user:leave' slug=class.slug %}"
+    class="btn btn-lg btn-fill btn-warning"> <span
+    class="'glyphicon glyphicon-remove-circle'"></span>Leave</a>
 
-{% if user in class.students.all %}
+    {% else %}
+    <a href="{% url 'user:join' slug=class.slug %}"
+    class="btn btn-lg btn-fill btn-primary"> <span
+    class="'glyphicon glyphicon-ok-circle'"></span>Join</a>
 
-  <a href="{% url 'user:leave' slug=class.slug %}"
-  class="btn btn-lg btn-fill btn-warning"> <span
-  class="'glyphicon glyphicon-remove-circle'"></span>Leave</a>
-
+  {% endif %}
   {% else %}
-  <a href="{% url 'user:join' slug=class.slug %}"
-  class="btn btn-lg btn-fill btn-primary"> <span
-  class="'glyphicon glyphicon-ok-circle'"></span>Join</a>
+  <a href="{% url 'user:attendence_list' class_id=class.id %}"><button class="btn btn-primary">Mark Attendence</button></a>
+  {%  endif %}
 
-{% endif %}
+
+</div>
+
+
+
+
 
 {% endblock %}

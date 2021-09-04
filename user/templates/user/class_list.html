@@ -2,14 +2,43 @@
 
 {% block content %}
 
+{% if User == class_list.teacher %}
+<div class="jumbotron">
+  <h1>Your Classes List : </h1>
+  <br>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Subject</th>
+        <th>Sem</th>
+        <th>Total Students</th>
+        <th>More</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in class_list %}
 
-{% for i in class %}
-  <a href="{% url 'user:single_class' slug=i.slug %}">
-    <h3>{{i.name}}</h3>
-    <h2>Created by : {{i.teacher}}</h2>
-    <h2>Total Students : {{i.students.count}}</h2>
-  </a>
-{% endfor %}
+      <tr>
+        <td>{{i.subject}}</td>
+        <td>{{i.sem}}</td>
+        <td>{{i.students.count}}</td>
+        <td><a href="{% url 'user:single_class' slug=i.slug %}">
+          <button class="btn btn-sm btn-primary">View class</button>
+        </a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="container jumbotron">
+  <h1>Opps! you dont hav permission to view this page</h1>
+  <h3>If You own this class link Please contact Admin</h3>
+</div>
+{% endif %}
+
+
+
 
 
 

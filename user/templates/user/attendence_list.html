@@ -9,6 +9,8 @@
     <br><br>
     <input type="submit" class="btn btn-primary" value="submit">
   </form>
+  <br>
+  <a href="{% url 'user:attendence_report' class_id=class_id %}" class="btn btn-secondary">View Attendence Report</a>
   <br><br><hr>
   <h2>Previous Attendence Records</h2>
     {% if list_attendence %}
