@@ -119,26 +119,30 @@ def edit_attendence(request,attendence_id,class_id):
 def save_attendence(request):
     attendence_list = get_object_or_404(AttendenceList,id=request.POST['attendence_id'])
     class_id = request.POST['class_id']
+    b = []
     student_class = get_object_or_404(CreateClass,id=class_id)
-    for i in student_class.students.all():
-        status = request.POST[i.username]
-        if status == 'present':
-            status = True
-        else:
-            status = False
-        if attendence_list.status == 1:
-            try:
-                a = Attendence.objects.get(subject = attendence_list,student = i)
-                a.status = status
+    for k in student_class.students.all():
+        b.append(k.username)
+    for i,j in request.POST.items():
+        if i in b:
+            status = j
+            if status == 'present':
+                status = True
+            else:
+                status = False
+            if attendence_list.status == 1:
+                try:
+                    a = Attendence.objects.get(subject = attendence_list,student = get_object_or_404(User,username = i))
+                    a.status = status
+                    a.save()
+                except Attendence.DoesNotExist:
+                    a = Attendence(subject = attendence_list,student = get_object_or_404(User,username = i) , status = status)
+                    a.save()
+            else:
+                a = Attendence(subject = attendence_list,student =get_object_or_404(User,username = i) , status = status)
                 a.save()
-            except Attendence.DoesNotExist:
-                a = Attendence(subject = attendence_list,student = i , status = status)
-                a.save()
-        else:
-            a = Attendence(subject = attendence_list,student = i , status = status)
-            a.save()
-            attendence_list.status = 1
-            attendence_list.save()
+                attendence_list.status = 1
+                attendence_list.save()
     return HttpResponseRedirect(reverse('user:attendence_list',args=[class_id]))
 
 @login_required()
