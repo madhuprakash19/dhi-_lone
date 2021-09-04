@@ -148,6 +148,9 @@ def save_attendence(request):
 @login_required()
 def attendence_report(request,class_id):
     attendence_list = list(Attendence.objects.filter( subject__who__id = class_id ))
+    list_attendence = list(AttendenceList.objects.filter(who__id=class_id))
+    total_class = len(list_attendence)
+    subject = get_object_or_404(CreateClass,id=class_id)
     report = {}
     for i in attendence_list:
         if i.student.username in report:
@@ -159,4 +162,4 @@ def attendence_report(request,class_id):
             else:
                 report[i.student.username] = 0
 
-    return render(request,'user/attendence_report.html',{'report':report})
+    return render(request,'user/attendence_report.html',{'report':report,'subject':subject,'total_class':total_class})
