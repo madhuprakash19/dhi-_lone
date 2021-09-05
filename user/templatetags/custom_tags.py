@@ -2,6 +2,6 @@ from django import template
 
 register = template.Library()
 
-@register.filter
-def per(a=0,b=0):
+
+def per(a,b):
     return (a/b)*100

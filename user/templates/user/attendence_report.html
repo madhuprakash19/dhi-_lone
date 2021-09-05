@@ -1,8 +1,6 @@
 
 {% extends 'base.html' %}
 {% block content %}
-{% load custom_tags %}
-
 <div class="jumbotron">
   <h1>{{subject.subject}} Sem {{subject.sem}}</h1>
   <h1> Attendence Report:</h1>
@@ -22,7 +20,10 @@
         <td>{{i}}</td>
         <td>{{total_class}}</td>
         <td>{{j}}</td>
-        <td>{{ per 10 20 }}</td>
+        <td><span id="{{i}}" ></span></td>
+        <script type="text/javascript">
+            document.getElementById("{{i}}").innerHTML = (({{j}}*100)/{{total_class}}).toFixed(2)
+        </script>
       </tr>
       {% endfor %}
     </tbody>
