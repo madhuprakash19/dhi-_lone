@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="jumbotron">
+  <h1>Select the Exam to continue </h1>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Exam Type</th>
+        <th>Status</th>
+        <th>Enter/View/Edit</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in marks_list %}
+      <tr>
+        <td>{{i.exam_type}}</td>
+          {% if i.status %}
+          <td>
+          Marked
+          </td>
+          <td>
+            <a href="{% url 'user:edit_marks' marks_list_id=i.id class_id=class_id %}" class="btn btn-secondary btn-sm">View/Edit</a>
+          </td>
+          {% else %}
+          <td>
+          Not Marked
+          </td>
+          <td>
+            <a href="{% url 'user:enter_marks' marks_list_id=i.id class_id=class_id %}" class="btn btn-primary btn-sm">Enter Marks</a>
+          </td>
+          {% endif %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron">
+  <h2>Edit/View Attendence</h2>
+  <form action="{% url 'user:save_marks' %}" method="post">
+    {% csrf_token %}
+  <input type="hidden" name="class_id" value="{{class_id}}">
+  <input type="hidden" name="marks_list_id" value="{{marks_list_id}}">
+  {% if student_list %}
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Student name</th>
+            <th>Marks</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in student_list %}
+          <tr>
+            <td>{{i.student}}</td>
+            <td>
+              <input type="number" name="{{i.student.username}}" value="{{i.score}}">
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      {% endif %}
+      <input type="submit" value="Edit Marks" class="btn btn-primary">
+  </form>
+  <br>
+  <p>Note : If Student has left the class</p>
+  <p>Their Marks cannot be modified</p>
+</div>
+
+
+
+
+
+
+{% endblock %}

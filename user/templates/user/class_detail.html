@@ -22,6 +22,8 @@
   {% endif %}
   {% else %}
   <a href="{% url 'user:attendence_list' class_id=class.id %}"><button class="btn btn-primary">Mark Attendence</button></a>
+  &emsp;
+  <a href="{% url 'user:marks_list' class_id=class.id %}"><button class="btn btn-secondary">Enter Marks</button></a>
   {%  endif %}
 
 

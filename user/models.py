@@ -30,7 +30,8 @@ class ClassMember(models.Model):
     user = models.ForeignKey(User,related_name='user_class',on_delete = models.CASCADE)
 
     def __str__(self):
-        return self.user.username
+        a = self.user.username + ' ' + self.class_group.subject
+        return a
 
     class Meta:
         unique_together = ('class_group','user')
@@ -70,15 +71,3 @@ class Marks(models.Model):
     def __str__(self):
         a = self.student.username + ' ' + self.subject.subject.subject
         return a
-
-
-
-
-
-
-
-
-
-
-
-        

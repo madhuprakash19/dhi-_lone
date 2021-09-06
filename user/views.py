@@ -177,3 +177,61 @@ def attendence_report(request,class_id):
                 report[i.student.username] = 0
 
     return render(request,'user/attendence_report.html',{'report':report,'subject':subject,'total_class':total_class})
+
+@login_required()
+def marks_list(request,class_id):
+    marks_list = list(MarksList.objects.filter(subject__id = class_id))
+    return render(request,'user/marks_list.html',{'marks_list':marks_list,'class_id':class_id})
+
+@login_required()
+def enter_marks(request,marks_list_id,class_id):
+    student_list = CreateClass.objects.filter(id=class_id)
+    return render(request,'user/enter_marks.html',
+    {'marks_list_id':marks_list_id,'class_id':class_id,'student_list':student_list})
+
+@login_required()
+def save_marks(request):
+    marks_list = get_object_or_404(MarksList,id=request.POST['marks_list_id'])
+    class_id = request.POST['class_id']
+    b = []
+    student_class = get_object_or_404(CreateClass,id=class_id)
+    for k in student_class.students.all():
+        b.append(k.username)
+    for i,j in request.POST.items():
+        if i in b:
+            score = j
+            if marks_list.status == False:
+                a = Marks(subject = marks_list,student = get_object_or_404(User,username = i) ,score = score)
+                a.save()
+                marks_list.status = True
+                marks_list.save()
+            else:
+                try:
+                    a = Marks.objects.get(subject = marks_list,student = get_object_or_404(User,username = i))
+                    a.score = score
+                    a.save()
+                except Marks.DoesNotExist:
+                    a = Marks(subject = marks_list,student = get_object_or_404(User,username = i) ,score = score)
+                    a.save()
+
+    return HttpResponseRedirect(reverse('user:marks_list',args=[class_id]))
+
+@login_required()
+def edit_marks(request,marks_list_id,class_id):
+    student_list = list(Marks.objects.filter( subject__id = marks_list_id ))
+    return render(request,'user/edit_marks.html',
+    {'marks_list_id':marks_list_id,'class_id':class_id,'student_list':student_list})
+
+
+@login_required()
+def marks_report(request):
+    user = request.user
+    class_list = list(ClassMember.objects.filter(user = user))
+    marks = list(Marks.objects.filter(student = user))
+    report = {}
+    for i in class_list:
+        report[i.class_group.subject] = {'LA1':0,'LA2':0,'MSE1':0,'MSE2':0,'MSE3':0,'SEE':0}
+    for i in marks:
+        report[i.subject.subject.subject][i.subject.exam_type] = i.score
+    print(report)
+    return render(request,'user/marks_report.html',{'report':report})
