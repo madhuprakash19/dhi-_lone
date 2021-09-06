@@ -6,7 +6,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from accounts.models import UserProfileInfo
-from user.models import CreateClass,ClassMember,AttendenceList,Attendence
+from user.models import (CreateClass,ClassMember,
+                        AttendenceList,Attendence,
+                        MarksList,Marks)
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import AttendenceForm
@@ -27,7 +29,19 @@ class CreatClassView(LoginRequiredMixin,CreateView):
     def form_valid(self,form):
         classroom = form.save(commit=False)
         classroom.teacher = self.request.user
-        classroom = classroom.save()
+        classroom.save()
+        a=MarksList(subject = classroom,exam_type = 'LA1')
+        a.save()
+        a=MarksList(subject = classroom,exam_type = 'LA2')
+        a.save()
+        a=MarksList(subject = classroom,exam_type = 'MSE1')
+        a.save()
+        a=MarksList(subject = classroom,exam_type = 'MSE2')
+        a.save()
+        a=MarksList(subject = classroom,exam_type = 'MSE3')
+        a.save()
+        a=MarksList(subject = classroom,exam_type = 'SEE')
+        a.save()
         return HttpResponseRedirect(self.success_url)
 
 class SingleClass(LoginRequiredMixin,DetailView):

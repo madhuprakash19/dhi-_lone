@@ -50,3 +50,35 @@ class Attendence(models.Model):
 
     def __str__(self):
         return self.subject.who.subject
+
+
+class MarksList(models.Model):
+    subject = models.ForeignKey(CreateClass,on_delete=models.CASCADE)
+    status = models.BooleanField(default = False)
+    exam_type = models.CharField(max_length=5)
+
+    def __str__(self):
+        a = self.exam_type + ' ' + self.subject.subject + ' ,SEM :' + str(self.subject.sem)
+        return a
+
+
+class Marks(models.Model):
+    subject = models.ForeignKey(MarksList,on_delete=models.CASCADE)
+    student = models.ForeignKey(User,on_delete=models.CASCADE)
+    score = models.IntegerField(default=0)
+
+    def __str__(self):
+        a = self.student.username + ' ' + self.subject.subject.subject
+        return a
+
+
+
+
+
+
+
+
+
+
+
+        
